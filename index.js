@@ -24,25 +24,23 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get("/api", function(req,res){
+  const crrDate = new Date();
+  res.json({unix: crrDate.valueOf(), date: crrDate.toUTCString()});
+})
+
 app.get("/api/:date", function (req, res) {
-  console.log(req.params.date);
   const reqDate = req.params.date;
   const unixRegex = /^(\d{13})?$/;
   const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
-  console.log(reqDate);
   if(unixRegex.test(reqDate)){
-    let convertedDate = new Date(reqDate);
-    let weekday = convertedDate.getDay();
-    console.log(convertedDate);
-    console.log(weekday);
-    console.log('converted time is ' + convertedDate.getDay());
+    console.log(reqDate);
+    let convertedDate = new Date(parseInt(reqDate));
+    res.json({unix: convertedDate.valueOf(), date: convertedDate.toUTCString()})
   } else if(dateRegex.test(reqDate)) {
     const convertedDate = new Date(reqDate);
-    res.json({unix: convertedDate.valueOf(), date: convertedDate.getutcstrings()})
-  } else if ( reqDate === '' ){
-    //return current date
-
+    res.json({unix: convertedDate.valueOf(), date: convertedDate.toUTCString()})
   } else {
     res.json({ error : "Invalid Date" });
   }
