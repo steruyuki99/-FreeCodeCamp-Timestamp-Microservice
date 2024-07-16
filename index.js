@@ -24,9 +24,9 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get("/api", function(req,res){
+app.get("/api/", function(req,res){
   const crrDate = new Date();
-  res.json({unix: crrDate.valueOf(), date: crrDate.toUTCString()});
+  res.json({unix: crrDate.valueOf(), utc: crrDate.toUTCString()});
 })
 
 app.get("/api/:date", function (req, res) {
@@ -35,13 +35,17 @@ app.get("/api/:date", function (req, res) {
   const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 
   if(unixRegex.test(reqDate)){
-    console.log(reqDate);
     let convertedDate = new Date(parseInt(reqDate));
-    res.json({unix: convertedDate.valueOf(), date: convertedDate.toUTCString()})
+    res.json({unix: convertedDate.valueOf(), utc: convertedDate.toUTCString()})
   } else if(dateRegex.test(reqDate)) {
     const convertedDate = new Date(reqDate);
-    res.json({unix: convertedDate.valueOf(), date: convertedDate.toUTCString()})
-  } else {
+    res.json({unix: convertedDate.valueOf(), utc: convertedDate.toGMTString()})
+  }else if (Date.parse(reqDate)){
+    const convertedDate = new Date(reqDate);
+    res.json({unix: convertedDate.valueOf(), utc: convertedDate.toGMTString()})
+  } else if(reqDate == ''){
+
+  }else {
     res.json({ error : "Invalid Date" });
   }
 
